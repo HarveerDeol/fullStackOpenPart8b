@@ -122,6 +122,10 @@ const typeDefs = `
       author: String!,
       genres: [String!]!
     ): Books
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Authors
   }
 
   type Query {
@@ -150,6 +154,16 @@ const resolvers = {
       }
       books = books.concat(book)
       return book
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find(a => a.name === args.name)
+      if (!author) {
+        return null
+      }
+  
+      const updatedAuthors = { ...author, born: args.setBornTo }
+      authors = authors.map(a => a.name === args.name ? updatedAuthors : a)
+      return updatedAuthors
     }
   },
   Authors: {
