@@ -1,5 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone'
+import { v1 } from 'uuid';
 
 let authors = [
   {
@@ -114,6 +115,15 @@ const typeDefs = `
     genres: [String!]!
   }
 
+  type Mutation {
+    addBook(
+      title: String!,
+      published: Int,
+      author: String!,
+      genres: [String!]!
+    ): Books
+  }
+
   type Query {
     bookCount:Int!
     authorCount:Int!
@@ -129,6 +139,18 @@ const resolvers = {
     allBooks: (root, args) => books.filter(book =>{
       if (args.author === book.author || book.genres.includes(args.genre) || !args){return book}}),
     allAuthors: () => authors
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid() }
+      const authorMatch = authors.some(a => a.name === book.author);
+      if (!authorMatch){
+        const author = {name: book.author, id: uuid()}
+        authors = authors.concet(author)
+      }
+      books = books.concat(book)
+      return book
+    }
   },
   Authors: {
     bookCount: (root) => books.reduce((accumulator, currentValue) => {
