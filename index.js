@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone'
-import { v1 } from 'uuid';
+import { v1 as  uuidv1 } from 'uuid';
 
 let authors = [
   {
@@ -142,11 +142,11 @@ const resolvers = {
   },
   Mutation: {
     addBook: (root, args) => {
-      const book = { ...args, id: uuid() }
+      const book = { ...args, id: uuidv1() }
       const authorMatch = authors.some(a => a.name === book.author);
       if (!authorMatch){
-        const author = {name: book.author, id: uuid()}
-        authors = authors.concet(author)
+        const author = {name: book.author, id: uuidv1()}
+        authors = authors.concat(author)
       }
       books = books.concat(book)
       return book
