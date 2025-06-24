@@ -1,9 +1,7 @@
 import { gql, useQuery } from '@apollo/client'
 
 const Books = (props) => {
-  if (!props.show) {
-    return null
-  }
+  
 
   const query = gql`
   query {
@@ -16,6 +14,10 @@ const Books = (props) => {
   }
 `
 const result = useQuery(query)
+
+if (!props.show) {
+  return null
+}
 
 if (result.loading) {
   return <div>loading...</div>

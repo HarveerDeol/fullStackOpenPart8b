@@ -1,4 +1,32 @@
 import { useState } from 'react'
+import {gql, useMutation } from '@apollo/client'
+
+const CREATE_AUTHOR = gql`
+mutation Mutation($title: String!, $author: String!, $genres: [String!]!, $published: Int) {
+  addBook(title: $title, author: $author, genres: $genres, published: $published) {
+    title
+    author
+    genres
+    published
+  }
+}
+`
+const queries = gql`
+query {
+  allAuthors {
+    bookCount
+    born
+    name
+    id
+  }
+  allBooks {
+    title
+    author
+    published
+    id
+  }
+}
+`
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -7,14 +35,20 @@ const NewBook = (props) => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
+  const [ createAuthor ] = useMutation(CREATE_AUTHOR, {
+    refetchQueries: [ { query: queries } ]
+  })
+
   if (!props.show) {
     return null
   }
 
+
   const submit = async (event) => {
     event.preventDefault()
 
-    console.log('add book...')
+    createAuthor({  variables: { title, author, published, genres } })
+
 
     setTitle('')
     setPublished('')
@@ -50,7 +84,7 @@ const NewBook = (props) => {
           <input
             type="number"
             value={published}
-            onChange={({ target }) => setPublished(target.value)}
+            onChange={({ target }) => setPublished(Number(target.value))}
           />
         </div>
         <div>

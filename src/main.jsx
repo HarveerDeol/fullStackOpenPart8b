@@ -8,27 +8,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
-const query = gql`
-  query AllAuthors {
-    allAuthors {
-      bookCount
-      born
-      name
-    }
-    allBooks {
-      title
-      author
-      published
-      id
-    }
-  }
-`
-
-client.query({ query })
-  .then((response) => {
-    console.log(response.data)
-  })
-
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ApolloProvider client={client}>
