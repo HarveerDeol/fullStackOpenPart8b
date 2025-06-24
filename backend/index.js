@@ -141,7 +141,7 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => books.filter(book =>{
-      if (args.author === book.author || book.genres.includes(args.genre) || !args){return book}}),
+      if (args.author === book.author || book.genres.includes(args.genre) || !args.book || !args.genre ){return book}}),
     allAuthors: () => authors
   },
   Mutation: {

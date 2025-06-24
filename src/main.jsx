@@ -15,6 +15,12 @@ const query = gql`
       born
       name
     }
+    allBooks {
+      title
+      author
+      published
+      id
+    }
   }
 `
 
