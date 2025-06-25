@@ -87,7 +87,7 @@ const resolvers = {
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => { 
       if (!args.genre){
-        return Book.find({});
+        return Book.find({}).populate('author');;
       }
       return Book.find({ genres : genre });
     },
@@ -99,31 +99,36 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
-      console.log('function works!')
-      const authorMatch = Author.find({name: args.author});
-      console.log(authorMatch)
+      let authorMatch = await Author.find({ name: args.author });
+      console.log("authorMathc",authorMatch)
       
-      if (!authorMatch){
+      if (!authorMatch.length){
         const newAuthor = new Author({name: args.author})
+        console.log('new author:',newAuthor)
         try {
           await newAuthor.save()
         } catch (error){
-          throw new GraphQLError('failed saving book',{
+          throw new GraphQLError('failed saving author',{
             extensions: {
               code: 'BAD_USER_INPUT',
               invalidArgs: args.name,
               error
-            }})
+            }}) 
         }
-      } else {
-
-      }
-      
-      const book = new Book({...args})
+      } 
+      authorMatch = await Author.find({ name: args.author });
+      console.log('new author 2:',authorMatch[0])
+      const book = new Book({
+        author: authorMatch[0]._id,
+        title: args.title,
+        published: args.published,
+        genres: args.genres,
+      });
       console.log(book)
       try {
         await book.save()
       } catch (error){
+        console.log('book object:',book)
         throw new GraphQLError('failed saving book',{
           extensions: {
             code: 'BAD_USER_INPUT',
@@ -183,12 +188,8 @@ const resolvers = {
     return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
   },
 
-  
-  
-
 }
 }
-
 
 const server = new ApolloServer({
   typeDefs,

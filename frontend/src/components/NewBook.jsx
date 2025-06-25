@@ -50,7 +50,7 @@ const NewBook = (props) => {
 
   const submit = async (event) => {
     event.preventDefault()
-
+    
     createAuthor({  variables: { title, author, published, genres } })
 
 
