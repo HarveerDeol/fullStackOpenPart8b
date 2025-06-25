@@ -12,20 +12,24 @@ mutation Mutation($name: String!, $setBornTo: Int!) {
 }
 `
 
+
+const query = gql`
+query {
+  allAuthors {
+    born
+    name
+    id
+  }
+}
+`
+
 const Authors = (props) => {
-  const [changeBirthYear] = useMutation(EDIT_BIRTHYEAR)
+  const [changeBirthYear] = useMutation(EDIT_BIRTHYEAR, {
+    refetchQueries: [ { query: query } ]
+  })
   const [selectedAuthor, setSelectedAuthor] = useState('')
   const [birthYear, setBirthYear] = useState('')
 
-  const query = gql`
-  query {
-    allAuthors {
-      born
-      name
-      id
-    }
-  }
-`
   const result = useQuery(query)
   if (!props.show) {
     return null
