@@ -8,7 +8,6 @@ mutation Mutation($name: String!, $setBornTo: Int!) {
     name
     id
     born
-    bookCount
   }
 }
 `
@@ -21,7 +20,6 @@ const Authors = (props) => {
   const query = gql`
   query {
     allAuthors {
-      bookCount
       born
       name
       id

@@ -7,7 +7,9 @@ const Books = (props) => {
   query {
     allBooks {
       title
-      author
+      author {
+        name
+      }
       published
       id
     }

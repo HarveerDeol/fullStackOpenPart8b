@@ -1,11 +1,14 @@
 import { useState } from 'react'
-import {gql, useMutation } from '@apollo/client'
+import {gql, useMutation,  } from '@apollo/client'
+
 
 const CREATE_AUTHOR = gql`
 mutation Mutation($title: String!, $author: String!, $genres: [String!]!, $published: Int) {
   addBook(title: $title, author: $author, genres: $genres, published: $published) {
     title
-    author
+    author {
+      name
+    }
     genres
     published
   }
@@ -14,14 +17,15 @@ mutation Mutation($title: String!, $author: String!, $genres: [String!]!, $publi
 const queries = gql`
 query {
   allAuthors {
-    bookCount
     born
     name
     id
   }
   allBooks {
     title
-    author
+    author {
+      name
+    }
     published
     id
   }
